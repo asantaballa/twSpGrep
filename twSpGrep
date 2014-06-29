@@ -26,37 +26,31 @@ Begin
 	While @@FETCH_STATUS = 0
 	Begin
 
-		-- --
-
 		Declare
 		  @RowData NVARCHAR(MAX) = @Procs_C1_Text
 		, @SplitOn NVARCHAR(5) = Char(13)
 
-        DECLARE @Counter INT
-        SET @Counter = 1 
-        WHILE ( CHARINDEX(@SplitOn, @RowData) > 0 ) 
-            BEGIN  
-				Declare @Line NVARCHAR(MAX)
-				Select @Line = LTRIM(RTRIM(SUBSTRING(@RowData, 1,
-                                                             CHARINDEX(@SplitOn,
-                                                              @RowData) - 1)))
+		DECLARE @Counter INT
+		SET @Counter = 1 
+		WHILE ( CHARINDEX(@SplitOn, @RowData) > 0 ) 
+		BEGIN  
+			Declare @Line NVARCHAR(MAX)
+			Select @Line 
+				= LTRIM(RTRIM(SUBSTRING(@RowData, 1, CHARINDEX(@SplitOn, @RowData) - 1)))
 
-				if CHARINDEX(@Search, @Line) > 0
-				Begin
-					Insert Into #Results
-					Select 
-					  @Procs_C1_Name
-					, @Counter 
-					, @Line 
-				End
+			If CHARINDEX(@Search, @Line) > 0
+			Begin
+				Insert Into #Results
+				Select 
+				  @Procs_C1_Name
+				, @Counter 
+				, @Line 
+			End
 
-                SET @RowData = SUBSTRING(@RowData,
-                                         CHARINDEX(@SplitOn, @RowData) + 1,
-                                         LEN(@RowData)) 
-                SET @Counter = @Counter + 1  
-            END 
-
-			-- --
+			SET @RowData 
+				= SUBSTRING(@RowData, CHARINDEX(@SplitOn, @RowData) + 1, LEN(@RowData)) 
+			SET @Counter = @Counter + 1  
+		END 
 
 		Fetch Next From Procs_C1 Into @Procs_C1_Name, @Procs_C1_Text
 	End
