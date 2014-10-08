@@ -1,4 +1,4 @@
-Create Procedure #twSpGrep
+Create Procedure twSpGrep
   @Search	Varchar(Max)
 , @Pname	Varchar(Max) = ''
 As
